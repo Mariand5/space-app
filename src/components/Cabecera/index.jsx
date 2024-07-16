@@ -2,6 +2,7 @@ import styled from "styled-components"
 import CampoTexto from "../CampoTexto"
 
 
+
 const HeaderEstilizado = styled.header`
    padding: 60px 0;
    display: flex;
@@ -11,10 +12,10 @@ const HeaderEstilizado = styled.header`
     }
 `
 
-const Cabecera = ({ setConsulta, textoConsulta }) => {
+const Cabecera = () => {
     return <HeaderEstilizado>
         <img src="img/logo.png" alt="Logo de Space App" />
-        <CampoTexto setConsulta={setConsulta} textoConsulta={textoConsulta} />
+        <CampoTexto />
     </HeaderEstilizado>
 }
 
