@@ -1,6 +1,5 @@
 import { styled } from "styled-components"
 import BotonIcono from "../../BotonIcono"
-
 const Figure = styled.figure`
     width: ${props => props.$expandida ? '90%' : '370px'};
     max-width: 100%;
@@ -29,6 +28,7 @@ const Figure = styled.figure`
         }
     }
 `
+
 const Pie = styled.footer`
     display: flex;
     justify-content: space-between;

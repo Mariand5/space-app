@@ -5,9 +5,9 @@ import BarraLateral from "./components/BarraLateral"
 import Banner from "./components/Banner"
 import banner from "./assets/banner.png"
 import Galeria from "./components/Galeria"
-import fotos from "./fotos.json"
-import { useState, useEffect } from "react"
+import { useEffect, useState } from "react"
 import ModalZoom from "./components/ModalZoom"
+import Cargando from "./components/Cargando"
 import Pie from "./components/Pie"
 
 const FondoGradiente = styled.div`
@@ -31,27 +31,19 @@ const ContenidoGaleria = styled.section`
 `
 
 const App = () => {
-  const [fotosDeGaleria, setFotosDeGaleria] = useState(fotos)
-  const [fotoSeleccionada, setFotoSeleccionada] = useState(null)
-  const [tag, setTag] = useState(0)
-  const [filtro, setFiltro] = useState("")
 
-  useEffect(() => {
-    const fotosFiltradas = fotos.filter(foto => {
-      const filtroPorTag = !tag || foto.tagId === tag;
-      const filtroPorTitulo = !filtro || foto.titulo.toLowerCase().includes(filtro.toLowerCase())
-      return filtroPorTag && filtroPorTitulo
-    })
-    setFotosDeGaleria(fotosFiltradas)
-  }, [filtro, tag])
+  const [consulta, setConsulta] = useState('')
+  const [fotosDeGaleria, setFotosDeGaleria] = useState([])
+  const [fotoSeleccionada, setFotoSeleccionada] = useState(null)
 
   const alAlternarFavorito = (foto) => {
-  //Agregamos el condicional ? para que no nos tire error en caso de que el valor sea null
+
     if (foto.id === fotoSeleccionada?.id) {
       setFotoSeleccionada({
         ...fotoSeleccionada,
         favorita: !fotoSeleccionada.favorita
       })
+
     }
 
     setFotosDeGaleria(fotosDeGaleria.map(fotoDeGaleria => {
@@ -62,37 +54,40 @@ const App = () => {
     }))
   }
 
+  useEffect(() => {
+    const getData = async () => {
+      const res = await fetch('http://localhost:3000/fotos');
+      const data = await res.json();
+      setFotosDeGaleria([...data]);
+    }
+    
+    setTimeout(() => getData(), 5000);
+  }, [])
 
   return (
     <>
       <FondoGradiente>
         <GlobalStyles />
         <AppContainer>
-          <Cabecera 
-            filtro={filtro} 
-            setFiltro={setFiltro}
-          />
+          <Cabecera setConsulta={setConsulta} />
           <MainContainer>
             <BarraLateral />
             <ContenidoGaleria>
-              <Banner 
-                texto="La galería más completa de fotos del espacio" 
-                backgroundImage={banner} 
-              />
-              <Galeria 
-                alSeleccionarFoto={foto => setFotoSeleccionada(foto)} 
-                fotos={fotosDeGaleria} 
-                alAlternarFavorito={alAlternarFavorito} 
-                setTag={setTag}
-              />
+              <Banner texto="La galería más completa de fotos del espacio" backgroundImage={banner} />
+              {
+                fotosDeGaleria.length == 0 ?
+                <Cargando></Cargando> :
+                <Galeria alSeleccionarFoto={foto => setFotoSeleccionada(foto)}
+                fotos={fotosDeGaleria}
+                alAlternarFavorito={alAlternarFavorito}
+                consulta={consulta} />
+              }
             </ContenidoGaleria>
           </MainContainer>
         </AppContainer>
-        <ModalZoom 
-          foto={fotoSeleccionada}
+        <ModalZoom foto={fotoSeleccionada}
           alCerrar={() => setFotoSeleccionada(null)}
-          alAlternarFavorito={alAlternarFavorito} 
-        />
+          alAlternarFavorito={alAlternarFavorito} />
         <Pie />
       </FondoGradiente>
     </>

@@ -7,11 +7,13 @@ const TagsContainer = styled.section`
     gap: 64px;
     margin-top: 56px;
 `
+
 const TagTitulo = styled.h3`
     color: #D9D9D9;
     font-size: 24px;
     margin: 0;
-`
+`;
+
 const Tag = styled.button`
     font-size: 24px;
     color: #FFFFFF;
@@ -26,17 +28,18 @@ const Tag = styled.button`
       border-color: #C98CF1;
     }
 `
+
 const Div = styled.div`
     display: flex;
     gap: 24px;
     justify-content: end;
 `
 
-const Tags = ({ setTag }) => {
+const Tags = () => {
     return <TagsContainer>
-        <TagTitulo>Busque por etiquetas:</TagTitulo>
+        <TagTitulo>Busque por tags:</TagTitulo>
         <Div>
-            {tags.map(tag => <Tag key={tag.id} onClick={() => setTag(tag.tag)}>{tag.titulo}</Tag>)}
+            {tags.map(tag => <Tag key={tag.id}>{tag.titulo}</Tag>)}
         </Div>
     </TagsContainer>
 }
